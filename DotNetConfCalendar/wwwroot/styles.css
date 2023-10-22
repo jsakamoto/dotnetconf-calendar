@@ -1,0 +1,16 @@
+body {
+    font-family: "Space Grotesk", Helvetica, Arial, sans-serif;
+}
+
+h1,
+.summary {
+    text-align: center;
+}
+
+h1 .text {
+    background: linear-gradient(to bottom right, #9780E5, #DE33BB);
+    background-clip: text;
+    -webkit-background: -webkit-linear-gradient(to bottom right, #9780E5, #DE33BB);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}

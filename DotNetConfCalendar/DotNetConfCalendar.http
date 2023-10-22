@@ -1,0 +1,6 @@
+@DotNetConfCalendar_HostAddress = http://localhost:5031
+
+GET {{DotNetConfCalendar_HostAddress}}/ical/
+Accept: application/json
+
+###
