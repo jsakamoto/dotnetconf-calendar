@@ -1,4 +1,4 @@
-# .NET Conf Calendar
+# .NET Conf Calendar [![tests](https://github.com/jsakamoto/dotnetconf-calendar/actions/workflows/tests.yml/badge.svg)](https://github.com/jsakamoto/dotnetconf-calendar/actions/workflows/tests.yml)
 
 Exposing the session schedules of [.NET Conf](https://www.dotnetconf.net/) as iCal calendar feed.
 
