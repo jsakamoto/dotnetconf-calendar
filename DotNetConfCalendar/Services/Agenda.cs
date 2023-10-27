@@ -69,10 +69,9 @@ internal class Agenda
 
                     var timeZoneId = this._abbreviationToTimeZoneId.TryGetValue(timeZoneText, out var tzid) ? tzid : timeZoneText;
                     var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);
-                    var offset = timeZoneInfo.GetUtcOffset(day.ToDateTime(TimeOnly.MinValue, DateTimeKind.Local));
 
                     var startDateTime = TimeZoneInfo.ConvertTimeToUtc(day.ToDateTime(startTime), timeZoneInfo);
-                    var endDateTime = TimeZoneInfo.ConvertTimeToUtc(day.ToDateTime(endTime).AddDays(endTime == TimeOnly.MinValue ? +1 : 0), timeZoneInfo);
+                    var endDateTime = TimeZoneInfo.ConvertTimeToUtc(day.ToDateTime(endTime).AddDays(endTime < startTime ? +1 : 0), timeZoneInfo);
 
                     sessionList.Add(new Session
                     {
