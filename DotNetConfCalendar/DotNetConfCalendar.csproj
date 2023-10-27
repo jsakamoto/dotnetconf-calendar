@@ -11,6 +11,7 @@
   <ItemGroup>
     <PackageReference Include="AngleSharp" Version="1.0.5" />
     <PackageReference Include="Ical.Net" Version="4.2.0" />
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.21.0" />
     <PackageReference Include="NodaTime" Version="3.1.9" />
     <PackageReference Include="TimeZoneNames" Version="6.0.0" />
   </ItemGroup>
