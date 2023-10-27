@@ -11,6 +11,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "README", "README", "{2EE684
 		README.md = README.md
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNetConfCalendar.Test", "DotNetConfCalendar.Test\DotNetConfCalendar.Test.csproj", "{5BD3FF8C-F8CF-467A-B03A-EFAC65A129BE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{494D2BC6-678B-437F-9FD1-1CF2614D8119}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{494D2BC6-678B-437F-9FD1-1CF2614D8119}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{494D2BC6-678B-437F-9FD1-1CF2614D8119}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5BD3FF8C-F8CF-467A-B03A-EFAC65A129BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5BD3FF8C-F8CF-467A-B03A-EFAC65A129BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5BD3FF8C-F8CF-467A-B03A-EFAC65A129BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5BD3FF8C-F8CF-467A-B03A-EFAC65A129BE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -15,4 +15,9 @@
     <PackageReference Include="TimeZoneNames" Version="6.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="DotNetConfCalendar.Test" />
+  </ItemGroup>
+
+
 </Project>
