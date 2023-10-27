@@ -1,4 +1,7 @@
-﻿namespace DotNetConfCalendar.Models;
+﻿using System.Security.Cryptography;
+using System.Text;
+
+namespace DotNetConfCalendar.Models;
 
 internal class Session
 {
@@ -11,4 +14,9 @@ internal class Session
     public string? Speakers { get; set; }
 
     public string? Description { get; set; }
+
+    public string GetHashForUID()
+    {
+        return new Guid(MD5.HashData(Encoding.UTF8.GetBytes(this.Title ?? ""))).ToString();
+    }
 }

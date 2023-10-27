@@ -103,6 +103,7 @@ internal class Agenda
             var icalEvent = new CalendarEvent
             {
                 IsAllDay = false,
+                Uid = session.GetHashForUID(),
                 DtStart = new CalDateTime(session.StartTime) { HasTime = true },
                 DtEnd = new CalDateTime(session.EndTime) { HasTime = true },
                 Summary = session.Title,
