@@ -20,8 +20,8 @@
     <meta property="og:description" content="Exposing the session schedules of .NET Conf as iCal calendar feed." />
 
     <title>.NET Conf Calendar</title>
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Space+Grotesk:wght@700&display=swap"
-          rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Space+Grotesk:wght@700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
     <link rel="stylesheet" href="styles.css">
 </head>
@@ -41,7 +41,13 @@
 
     <p>You can subscribe to the calendar feed by using the following URL:</p>
 
-    <pre>https://dotnetconf-calendar.azurewebsites.net/ical/v1</pre>
+    <code style="display: flex; align-items: center; gap: 8px; padding: 8px 16px;">
+        <span id="ical-url">https://dotnetconf-calendar.azurewebsites.net/ical/v1</span>
+        <span aria-hidden="true" class="material-symbols-outlined" style="cursor:pointer; user-select: none;" title="copy the URL" onclick="copyUrl()">content_copy</span>
+    </code>
+    <div id="tip" style="font-size: 80%; margin: 8px; opacity: 0;">
+        🔔 The URL has been copied to clipboard.
+    </div>
 
     <h2>How it works</h2>
 
@@ -71,6 +77,22 @@
             </a>
         </a>)
     </p>
+
+    <script>
+        let timerId = -1;
+        const copyUrl = () => {
+            const url = document.getElementById("ical-url");
+            navigator.clipboard.writeText(url.textContent);
+            const tip = document.getElementById("tip");
+            tip.style.transition = "";
+            tip.style.opacity = 0.8;
+            if (timerId !== -1) clearTimeout(timerId);
+            timerId = setTimeout(() => {
+                tip.style.transition = "opacity 1s linear";
+                tip.style.opacity = 0;
+            }, 2000);
+        }
+    </script>
 
 </body>
 
