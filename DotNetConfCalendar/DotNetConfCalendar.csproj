@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
     <WarningsAsErrors>$(WarningsAsErrors);nullable</WarningsAsErrors>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -10,9 +10,9 @@
 
   <ItemGroup>
     <PackageReference Include="AngleSharp" Version="1.0.5" />
-    <PackageReference Include="Ical.Net" Version="4.2.0" />
-    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.21.0" />
-    <PackageReference Include="NodaTime" Version="3.1.9" />
+    <PackageReference Include="Ical.Net" Version="4.3.1" />
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.22.0" />
+    <PackageReference Include="NodaTime" Version="3.2.0" />
     <PackageReference Include="TimeZoneNames" Version="6.0.0" />
   </ItemGroup>
 
