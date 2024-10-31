@@ -1,4 +1,5 @@
-using AngleSharp.Dom;
+using System.Text.RegularExpressions;
+using AngleSharp.Html.Dom;
 using AngleSharp.Html.Parser;
 using DotNetConfCalendar.Models;
 using Ical.Net;
@@ -36,6 +37,11 @@ internal class Agenda
             .ToDictionary(set => set.AbbreviationName, set => set.TimeZoneId);
     }
 
+    private TimeZoneInfo GetTimeZoneInfo(string timeZoneId)
+    {
+        return TimeZoneInfo.FindSystemTimeZoneById(this._abbreviationToTimeZoneId.TryGetValue(timeZoneId, out var standardTimeZoneId) ? standardTimeZoneId : timeZoneId);
+    }
+
     internal async ValueTask<IEnumerable<Session>> GetSessionsAsync()
     {
         // Fetch the Agenda page of .NET Conf.
@@ -45,51 +51,38 @@ internal class Agenda
         // Parse the HTML string by AngleSharp's HtmlParser
         var parser = new HtmlParser();
         var document = await parser.ParseDocumentAsync(response);
-        var agendaContainer = document.QuerySelector(".agenda-container");
 
-        var sessionList = new List<Session>();
+        return this.EnumerateSessions(document, "")
+            .Concat(this.EnumerateSessions(document, "bonus"));
+    }
 
-        var day = DateOnly.MinValue;
-        foreach (var section in agendaContainer?.Children ?? Enumerable.Empty<IElement>())
+    private IEnumerable<Session> EnumerateSessions(IHtmlDocument document, string prefix)
+    {
+        var agendaGroupTitles = document.QuerySelectorAll($".agenda-group-title[data-{prefix}sessionid]");
+
+        foreach (var agendaGroupTitle in agendaGroupTitles)
         {
-            if (section.ClassList.Contains("agenda-group"))
+            var sessionId = agendaGroupTitle.GetAttribute($"data-{prefix}sessionid");
+            var timeSpan = agendaGroupTitle.QuerySelector("span")!;
+            var startTimeGroups = Regex.Match(timeSpan.GetAttribute($"data-{prefix}start")!, "^(?<datetime>.+)[ ]+(?<timeZone>[A-Z]+)$").Groups;
+            var endTimeGroups = Regex.Match(timeSpan.GetAttribute($"data-{prefix}end")!, "^(?<datetime>.+)[ ]+(?<timeZone>[A-Z]+)$").Groups;
+            var agendaSession = document.QuerySelector($".agenda-group-sessions-container[data-{prefix}sessionid='{sessionId}'] .agenda-session")!;
+            var title = agendaSession.QuerySelector(".agenda-title")?.TextContent.Trim();
+            var speakers = agendaSession.QuerySelector(".agenda-speaker-name")?.TextContent.Trim();
+            var description = agendaSession.QuerySelector(".agenda-description")?.TextContent.Trim();
+
+            var startTime = TimeZoneInfo.ConvertTimeToUtc(DateTime.Parse(startTimeGroups["datetime"].Value), this.GetTimeZoneInfo(startTimeGroups["timeZone"].Value));
+            var endTime = TimeZoneInfo.ConvertTimeToUtc(DateTime.Parse(endTimeGroups["datetime"].Value), this.GetTimeZoneInfo(endTimeGroups["timeZone"].Value));
+
+            yield return new Session()
             {
-                foreach (var agenda in section.Children.Chunk(3))
-                {
-                    var schedule = agenda[0].QuerySelector("span")?.TextContent;
-                    var title = agenda[2].QuerySelector(".agenda-title")?.TextContent;
-                    var speakers = agenda[2].QuerySelector(".agenda-speaker-name")?.TextContent;
-                    var description = agenda[2].QuerySelector(".agenda-description")?.TextContent;
-                    if (string.IsNullOrEmpty(schedule)) continue;
-
-                    var timeParts = schedule.Split(' ');
-                    var startTime = TimeOnly.Parse(timeParts[0]);
-                    var endTime = TimeOnly.Parse(timeParts[2]);
-                    var timeZoneText = timeParts[3];
-
-                    var timeZoneId = this._abbreviationToTimeZoneId.TryGetValue(timeZoneText, out var tzid) ? tzid : timeZoneText;
-                    var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);
-
-                    var startDateTime = TimeZoneInfo.ConvertTimeToUtc(day.ToDateTime(startTime), timeZoneInfo);
-                    var endDateTime = TimeZoneInfo.ConvertTimeToUtc(day.ToDateTime(endTime).AddDays(endTime < startTime ? +1 : 0), timeZoneInfo);
-
-                    sessionList.Add(new Session
-                    {
-                        StartTime = startDateTime,
-                        EndTime = endDateTime,
-                        Title = title,
-                        Speakers = speakers,
-                        Description = description
-                    });
-                }
-            }
-            else
-            {
-                day = DateOnly.TryParse(section.QuerySelector("p")?.TextContent, out var d) ? d : day;
-            }
+                StartTime = startTime,
+                EndTime = endTime,
+                Title = title,
+                Speakers = speakers,
+                Description = description
+            };
         }
-
-        return sessionList;
     }
 
     internal async ValueTask<string> GetSessionsAsICalAsync()
@@ -97,7 +90,7 @@ internal class Agenda
         var sessionList = await this.GetSessionsAsync();
         var calendar = new Calendar();
         calendar.AddProperty("X-WR-CALNAME", ".NET Conf");
-        calendar.AddProperty("X-WR-CALDESC", "Join the .NET Conf 2023 free virtual event November 14-16 to learn about the newest developments across the .NET platform, open source, and dev tools. Mark your calendar!");
+        calendar.AddProperty("X-WR-CALDESC", "Join the .NET Conf 2024 free virtual event November 12-14 to learn about the newest developments across the .NET platform, open source, and dev tools. Mark your calendar!");
         foreach (var session in sessionList)
         {
             var icalEvent = new CalendarEvent
